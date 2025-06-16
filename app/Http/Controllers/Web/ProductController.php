@@ -17,6 +17,21 @@ class ProductController extends Controller
         return view('web.products.index', compact('products'));
     }
 
+    public function topSelling()
+    {
+        return view('web.products.top-selling');
+    }
+
+    public function onSale()
+    {
+        return view('web.products.sales');
+    }
+
+    public function newProducts()
+    {
+        return view('web.products.new');
+    }
+
     public function show(Product $product)
     {
         // Obtener atributos personalizados

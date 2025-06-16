@@ -14,12 +14,14 @@ class CheckoutController extends Controller
 {
     public function index()
     {
+        // Opcional: Guardar URL intencionada manualmente
+        session(['url.intended' => url()->current()]);
+
         return view('web.checkout.index');
     }
 
     public function store(Request $request)
     {
-        // Validar datos del formulario
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
@@ -37,7 +39,7 @@ class CheckoutController extends Controller
 
         // Crear orden
         $order = Order::create([
-            'contact_id' => auth()->id(),
+            'contact_id' => auth()->id(), // null si no está logueado
             'seller_id' => 1,
             'order_type' => 0,
             'currency_id' => 1,
@@ -64,14 +66,19 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // Enviar correo de confirmación
-        Mail::to($request->email)->send(new OrderPlaced($order, $cart, $request->all()));
-        Mail::to('admin@suriaenergy.com')->send(new OrderPlaced($order, $cart, $request->all(), true));
+        // Enviar correo solo si existe email válido
+        if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+            Mail::to($request->email)->send(new OrderPlaced($order, $cart, $request->all()));
+            Mail::to('admin@suriaenergy.com')->send(new OrderPlaced($order, $cart, $request->all(), true));
+        }
 
         // Limpiar carrito
         session()->forget('cart');
 
-        // Redirigir a éxito
+        // Guardar orden temporalmente para mostrar éxito
+        session(['order' => $order]);
+
+        // Redirigir con orden en sesión
         return redirect()->route('checkout.success')->with('order', $order);
     }
 }

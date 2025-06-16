@@ -1,5 +1,5 @@
 <div>
-    @if (isset($cartItems) && count($cartItems) > 0)
+    @if (count($cartItems) > 0)
         <ul class="space-y-4">
             @foreach ($cartItems as $id => $item)
                 <li class="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
@@ -14,7 +14,7 @@
                             </div>
                         @endif
 
-                        <div>
+                        <div class="text-left">
                             <p class="font-medium">{{ $item['name'] }}</p>
                             <p class="text-sm text-gray-500">SKU: {{ $item['sku'] ?? '-' }}</p>
                         </div>
@@ -28,7 +28,15 @@
             @endforeach
         </ul>
 
-        <!-- Botón de Finalizar Compra -->
+        <!-- Total -->
+        <div class="mt-4 pt-4 border-t border-gray-200">
+            <div class="flex justify-between text-lg font-bold">
+                <span>Total:</span>
+                <span>${{ number_format($total ?? 0, 2) }}</span>
+            </div>
+        </div>
+
+        <!-- Botón Finalizar Compra -->
         <div class="mt-6">
             <a href="{{ route('cart.checkout') }}"
                 class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 px-4 rounded-md transition duration-200">
@@ -38,22 +46,4 @@
     @else
         <p class="text-gray-500">Tu carrito está vacío.</p>
     @endif
-
-    <!-- Notificación Toast -->
-    <script>
-        document.addEventListener('livewire:load', function() {
-            window.livewire.on('notify', (data) => {
-                const toast = document.createElement('div');
-                toast.className =
-                    `fixed bottom-4 right-4 px-4 py-2 rounded shadow-md bg-${data.type === 'success' ? 'green' : data.type === 'error' ? 'red' : 'blue'}-600 text-white transition-opacity duration-300`;
-                toast.innerText = data.message;
-                document.body.appendChild(toast);
-
-                setTimeout(() => {
-                    toast.style.opacity = 0;
-                    setTimeout(() => document.body.removeChild(toast), 300);
-                }, 3000);
-            });
-        });
-    </script>
 </div>

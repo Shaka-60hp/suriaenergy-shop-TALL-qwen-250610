@@ -3,13 +3,23 @@
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\CartController;
+use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\CheckoutController;
+use App\Http\Controllers\Auth\RegisterController;
 
-// Home / Catálogo
-Route::get('/', [ProductController::class, 'index'])->name('home');
+
+// Home
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Catálogo
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/productos/mas-vendidos', [ProductController::class, 'topSelling'])->name('products.top-selling');
+Route::get('/productos/ofertas', [ProductController::class, 'onSale'])->name('products.on-sale');
+Route::get('/productos/nuevos', [ProductController::class, 'newProducts'])->name('products.new');
 
 // Categorías
 Route::get('/categories/{family:slug}', [ProductController::class, 'byFamily'])->name('products.by-family');
@@ -22,37 +32,29 @@ Route::prefix('cart')->group(function () {
     Route::post('/clear', [CartController::class, 'clear'])->name('cart.clear');
 });
 
-// resources/views/livewire/auth/login.blade.php
-Route::get('/login', function () {
-    return view('livewire.auth.login');
-})->name('login');
+// Rutas de Login
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
 
-// resources/views/livewire/auth/register.blade.php
-Route::get('/register', function () {
-    return view('livewire.auth.register');
-})->name('register');
+// Rutas de Registro
+Route::get('/register', [RegisterController::class, 'create'])->name('register');
+Route::post('/register', [RegisterController::class, 'store']);
 
 // Dentro del grupo autenticado (opcional, pero recomendado)
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('cart.checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/checkout/success', function () {
+    $order = session('order');
+    return view('web.checkout.success', compact('order'));
+})->name('checkout.success');
+
 Route::middleware('auth')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('cart.checkout');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/checkout/success', function () {
-        $order = session('order');
-        return view('web.checkout.success', compact('order'));
-    })->name('checkout.success');
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    // Ruta de logout
+    Route::post('/logout', function () {
+        auth()->logout();
+        session()->invalidate();
+        session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
 });
-
-// Originales del setup
-// Route::view('dashboard', 'dashboard')
-//     ->middleware(['auth', 'verified'])
-//     ->name('dashboard');
-
-// Route::middleware(['auth'])->group(function () {
-//     Route::redirect('settings', 'settings/profile');
-
-//     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-//     Volt::route('settings/password', 'settings.password')->name('settings.password');
-//     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
-// });
-
-// require __DIR__.'/auth.php';

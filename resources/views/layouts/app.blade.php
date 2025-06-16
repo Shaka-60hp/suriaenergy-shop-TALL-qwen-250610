@@ -12,7 +12,33 @@
     <!-- Livewire Styles -->
     @livewireStyles
 
+    <!-- Estilos personalizados -->
+    <style>
+        .product-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination li {
+            display: inline-block;
+            margin-right: 4px;
+        }
+
+        .pagination li span,
+        .pagination li a {
+            @apply px-3 py-1 rounded-md text-sm hover:bg-blue-100;
+        }
+
+        .pagination .active span {
+            @apply bg-blue-600 text-white hover:bg-blue-700;
+        }
+    </style>
     <!-- Estilos personalizados (si los usas) -->
+
     @stack('styles')
 </head>
 
@@ -20,27 +46,55 @@
 
     <!-- Header -->
     <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold">SuriaEnergy Shop</h1>
-            <nav>
-                <a href="{{ route('home') }}" class="mr-4 hover:underline">Inicio</a>
-                <a href="{{ route('cart.index') }}" class="hover:underline relative">
-                    Carrito
-                    @if (session('cart') && count(session('cart')))
-                        <span
-                            class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                            {{ count(session('cart')) }}
-                        </span>
-                    @endif
-                </a>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-700">SuriaEnergy Shop</h1>
+
+            <nav class="space-x-6">
+                <a href="{{ route('home') }}" class="text-gray-700 hover:text-blue-600 transition">Inicio</a>
+                <a href="{{ route('products.index') }}"
+                    class="text-gray-700 hover:text-blue-600 transition">Catálogo</a>
+                <a href="{{ route('cart.index') }}" class="text-gray-700 hover:text-blue-600 transition">Carrito</a>
+
+                <!-- Menú de usuario -->
+                @auth
+                    <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-blue-600 transition">Mi cuenta</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm">Cerrar sesión</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 transition">Iniciar sesión</a>
+                    <a href="{{ route('register') }}" class="text-gray-700 hover:text-blue-600 transition">Registrarse</a>
+                @endauth
             </nav>
         </div>
-
-        <!-- Componente global del carrito -->
-        <div class="hidden">
-            @livewire('cart-component', key('cart-global'))
-        </div>
     </header>
+
+    <!-- Navegación rápida -->
+    @if (request()->routeIs('home'))
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <a href="{{ route('products.top-selling') }}"
+                    class="bg-gray-100 p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+                    <h3 class="text-xl font-bold text-gray-800">🏆 Más Vendidos</h3>
+                    <p class="mt-2 text-sm text-gray-600">Los productos más populares entre nuestros usuarios.</p>
+                </a>
+
+                <a href="{{ route('products.new') }}"
+                    class="bg-gray-100 p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+                    <h3 class="text-xl font-bold text-gray-800">🆕 Nuevos</h3>
+                    <p class="mt-2 text-sm text-gray-600">Lo último en tecnología solar y eficiencia energética.</p>
+                </a>
+
+                <a href="{{ route('products.on-sale') }}"
+                    class="bg-gray-100 p-6 rounded-lg text-center hover:shadow-md transition-shadow">
+                    <h3 class="text-xl font-bold text-gray-800">💸 Ofertas</h3>
+                    <p class="mt-2 text-sm text-gray-600">Descuentos especiales disponibles solo por tiempo limitado.
+                    </p>
+                </a>
+            </div>
+        </div>
+    @endif
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-6">
@@ -54,12 +108,26 @@
         </div>
     </footer>
 
+    <!-- Componente global del carrito -->
+    <div class="hidden">
+        @livewire('cart-component')
+    </div>
+
     <!-- Livewire Scripts -->
     @livewireScripts
 
     <!-- Notificaciones globales con Livewire -->
     <script>
         document.addEventListener('livewire:init', function() {
+            Livewire.on('checkout-start', () => {
+                processing = true;
+            });
+
+            Livewire.on('checkout-success', () => {
+                processing = false;
+                window.location.href = "{{ route('checkout.success') }}";
+            });
+
             Livewire.on('notify', (data) => {
 
                 // Accedemos a los datos reales en data[0]

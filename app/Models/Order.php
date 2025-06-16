@@ -16,6 +16,11 @@ class Order extends Model
         'delivery_date',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'contact_id');
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id');
