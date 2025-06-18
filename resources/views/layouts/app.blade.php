@@ -38,8 +38,10 @@
                 <a href="{{ route('home') }}" class="text-gray-700 hover:text-blue-600 transition">Inicio</a>
                 <a href="{{ route('products.index') }}"
                     class="text-gray-700 hover:text-blue-600 transition">Catálogo</a>
-                <a href="{{ route('cart.index') }}" class="text-gray-700 hover:text-blue-600 transition">Carrito</a>
-
+                <!-- Mini Carrito -->
+                <div class="ml-6 hidden md:block">
+                    @livewire('mini-cart')
+                </div>
                 @auth
                     <a href="{{ route('dashboard') }}" class="text-gray-700 hover:text-blue-600 transition">Mi cuenta</a>
                     <form method="POST" action="{{ route('logout') }}">

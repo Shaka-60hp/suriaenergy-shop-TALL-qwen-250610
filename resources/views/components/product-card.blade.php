@@ -1,5 +1,4 @@
-<a href="{{ route('products.show', $product) }}"
-    class="block bg-white rounded-lg shadow hover:shadow-md transition-shadow">
+<a href="{{ route('products.show', $product) }}" wire:navigate class="block product-card">
     <div class="relative h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
         @if ($product->image)
             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->product }}"
