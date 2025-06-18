@@ -461,3 +461,19 @@ En lugar de que sea el boton el que muestre "procesando" y el SPINNER, es posibl
 ### prompt 28
 
 Si , vamos a generar tambien un mini-carrito para el header
+
+### prompt 29
+
+Comparto contigo la carpeta en Github para eventualmente poder revisar diferentes archivos generados: https://github.com/Shaka-60hp/suriaenergy-shop-TALL-qwen-250610
+
+### prompt 29.1
+
+Teniendo en cuenta que estamos usando Laravel 12 con con Livewire 3 y Tailwind, me gustaria comenzar a trabajar en el diseño en general, para que sea responsivo y sea atractivo tanto en moviles como en laptops
+
+### prompt 29.2
+
+Teniendo en cuenta que estamos usando Laravel 12 con con Livewire 3 y Tailwind, y que puedes reavisar los archivos existetes en el proyecto en https://github.com/Shaka-60hp/suriaenergy-shop-TALL-qwen-250610 me gustaria comenzar a trabajar en el diseño en general, para que sea responsivo y sea atractivo tanto en moviles como en laptops. Ten en cuenta los archivos que ya existen , su estructura, los elementos instalados de forma que puedas mostrar las modificaciones que tendre que realizar con las diferencias de antes y despues
+
+### prompt 29.3
+
+Teniendo en cuenta que estamos usando Laravel 12 con Livewire 3 y Tailwind, y que puedes reavisar los archivos existetes en el proyecto en https://github.com/Shaka-60hp/suriaenergy-shop-TALL-qwen-250610 me gustaria comenzar a trabajar en el diseño en general, para que sea responsivo y sea atractivo tanto en moviles como en laptops. Ten en cuenta los archivos que ya existen , su estructura, los elementos instalados de forma que puedas mostrar las modificaciones que tendre que realizar con las diferencias de antes y despues, y quiero hacerlo de a una sola etapa o archivo por ves, explicado detalladamente y realmente teniendo en cuenta el codigo existente en el repositorio
